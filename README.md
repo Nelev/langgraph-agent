@@ -81,8 +81,10 @@ uv run python -m agent.agent
 [agent/api.py](agent/api.py) exposes the agent as a plain HTTP service, as an alternative to the LangGraph dev server:
 
 ```bash
-uv run uvicorn agent.api:app --host 0.0.0.0 --port 8000
+uv run serve
 ```
+
+`serve` is a `[project.scripts]` entry point (see [pyproject.toml](pyproject.toml)) that runs the equivalent of `uvicorn agent.api:app --host 0.0.0.0 --port 8000`.
 
 - `GET /health` — liveness check.
 - `POST /invoke` — run the agent on a single message:

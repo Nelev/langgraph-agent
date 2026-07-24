@@ -1,5 +1,6 @@
 """FastAPI wrapper that exposes the compiled agent over HTTP."""
 
+import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 from langchain.messages import HumanMessage
@@ -32,3 +33,8 @@ async def invoke(request: InvokeRequest) -> InvokeResponse:
     """Run the agent on a single user message and return its final reply."""
     result = await agent.ainvoke({"messages": [HumanMessage(content=request.message)]})
     return InvokeResponse(response=result["messages"][-1].content)
+
+
+def serve() -> None:
+    """Entry point for `uv run serve`: run the API on 0.0.0.0:8000."""
+    uvicorn.run("agent.api:app", host="0.0.0.0", port=8000)
