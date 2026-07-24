@@ -1,8 +1,8 @@
-# Step 1: Define tools and model
+"""Builds and compiles the arithmetic tool-calling LangGraph agent."""
 
+from langgraph.graph import StateGraph, START, END
 from .utils.nodes import llm_call, tool_node, should_continue
 from .utils.state import MessagesState
-from langgraph.graph import StateGraph, START, END
 
 # Step 6: Build agent
 
@@ -28,7 +28,6 @@ agent = agent_builder.compile()
 
 if __name__ == "__main__":
     from IPython.display import Image, display
-    from langchain.messages import HumanMessage
 
     # Show the agent
     display(Image(agent.get_graph(xray=True).draw_mermaid_png()))
