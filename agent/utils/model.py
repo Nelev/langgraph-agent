@@ -1,3 +1,5 @@
+"""Chat model and tool bindings shared by the agent's graph nodes."""
+
 from langchain.chat_models import init_chat_model
 from .tools import add, multiply, divide
 

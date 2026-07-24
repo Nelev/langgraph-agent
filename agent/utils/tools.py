@@ -1,3 +1,5 @@
+"""Arithmetic tools exposed to the agent's model."""
+
 from langchain.tools import tool
 
 # Define tools

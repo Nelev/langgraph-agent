@@ -1,9 +1,13 @@
+"""Graph node functions: the LLM call, tool execution, and routing."""
+
 from typing import Literal
 from langgraph.graph import END
 from langchain.messages import ToolMessage
 from langchain.messages import SystemMessage
 from .model import model_with_tools, tools_by_name
 from .state import MessagesState
+
+SYSTEM_PROMPT = "You are a helpful assistant tasked with performing arithmetic on a set of inputs."
 
 
 def tool_node(state: MessagesState):
@@ -23,9 +27,7 @@ def llm_call(state: MessagesState):
         "messages": [
             model_with_tools.invoke(
                 [
-                    SystemMessage(
-                        content="You are a helpful assistant tasked with performing arithmetic on a set of inputs."
-                    )
+                    SystemMessage(content=SYSTEM_PROMPT)
                 ]
                 + state["messages"]
             )

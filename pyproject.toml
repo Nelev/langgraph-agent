@@ -12,3 +12,8 @@ dependencies = [
     "langgraph>=1.2.9",
     "langgraph-cli[inmem]>=0.4.31",
 ]
+
+[dependency-groups]
+dev = [
+    "pylint>=4.0.6",
+]
