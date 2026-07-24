@@ -33,6 +33,7 @@ The model is wired up via `langchain.chat_models.init_chat_model` targeting a lo
 ```
 agent/
   agent.py            # builds and compiles the StateGraph (entry point for `langgraph dev`)
+  api.py              # FastAPI wrapper exposing the agent over HTTP
   utils/
     model.py           # chat model + tools + tools_by_name
     nodes.py            # llm_call, tool_node, should_continue
@@ -74,6 +75,27 @@ This starts the LangGraph in-memory dev server and Studio UI, loading the graph 
 ```bash
 uv run python -m agent.agent
 ```
+
+## Running the API wrapper
+
+[agent/api.py](agent/api.py) exposes the agent as a plain HTTP service, as an alternative to the LangGraph dev server:
+
+```bash
+uv run uvicorn agent.api:app --host 0.0.0.0 --port 8000
+```
+
+- `GET /health` — liveness check.
+- `POST /invoke` — run the agent on a single message:
+
+  ```bash
+  curl -X POST http://localhost:8000/invoke \
+    -H "Content-Type: application/json" \
+    -d '{"message": "Add 3 and 4."}'
+  ```
+
+  Response: `{"response": "..."}`.
+
+Each call is stateless — there is no conversation memory between requests. Multi-turn conversations would require adding a LangGraph checkpointer keyed by a caller-supplied session/thread ID.
 
 ## Configuration
 
