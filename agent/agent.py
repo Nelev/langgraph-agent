@@ -1,0 +1,40 @@
+# Step 1: Define tools and model
+
+from .utils.nodes import llm_call, tool_node, should_continue
+from .utils.state import MessagesState
+from langgraph.graph import StateGraph, START, END
+
+# Step 6: Build agent
+
+# Build workflow
+agent_builder = StateGraph(MessagesState)
+
+# Add nodes
+agent_builder.add_node("llm_call", llm_call)
+agent_builder.add_node("tool_node", tool_node)
+
+# Add edges to connect nodes
+agent_builder.add_edge(START, "llm_call")
+agent_builder.add_conditional_edges(
+    "llm_call",
+    should_continue,
+    ["tool_node", END]
+)
+agent_builder.add_edge("tool_node", "llm_call")
+
+# Compile the agent
+agent = agent_builder.compile()
+
+
+if __name__ == "__main__":
+    from IPython.display import Image, display
+    from langchain.messages import HumanMessage
+
+    # Show the agent
+    display(Image(agent.get_graph(xray=True).draw_mermaid_png()))
+
+    # Invoke
+    messages = []
+    messages = agent.invoke({"messages": messages})
+    for m in messages["messages"]:
+        m.pretty_print()
